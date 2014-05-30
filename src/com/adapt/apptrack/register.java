@@ -27,18 +27,17 @@ public class register extends HttpServlet {
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
 		try{
-			String firstName = request.getParameter("firstName");
-			String lastName = request.getParameter("lastName");
+			Employee empTemp = new Employee();
+			empTemp.setFirstName(request.getParameter("firstName"));
+			empTemp.setrequest.getParameter("lastName");
 			String eMail = request.getParameter("eMail");
 			Integer contactNumber = request.getParameter("contactNumber");
 			String password = request.getParameter("password");
 		}
-		Security secureObject = new Security();
-		
 		finally{
-			
-			out.close();
+			Security secureObject = new Security();
 		}
+				
 		
 	}
 

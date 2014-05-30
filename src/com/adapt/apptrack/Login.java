@@ -4,6 +4,7 @@ package com.adapt.apptrack;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -14,11 +15,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import com.google.gson.Gson;
 /**
  * Servlet implementation class Login
  */
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	ResultSet rs = null ;
     public Login() {
         super();
     }
@@ -38,14 +42,23 @@ public class Login extends HttpServlet {
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
 		try{
-			String name = request.getParameter("Username");
+			String name = request.getParameter("userName");
 		String passKey = request.getParameter("Password");
 		boolean test =validateUser(name,passKey);
 		if(test == true){
-			out.println("<h1>Welcome </h1>"+name);
+			System.out.println("Working Good Till now");
+			Gson gson = new Gson();
+			//String json = gson.toJson(rs);
+			//Employee emp = new Employee();
+			//emp.initialiseObject(json);
+			//request.setAttribute("json",json);
+			RequestDispatcher rd = request.getRequestDispatcher("home.jsp");//Redirects To Home.jsp
+			rd.forward(request, response);
 		}
 		else{
-			out.println("Login Failure");
+			out.println("Login Failure Try Again");
+			RequestDispatcher rd = request.getRequestDispatcher("index.html");
+			rd.include(request, response);
 		}
 		}
 		finally {
@@ -59,13 +72,12 @@ public class Login extends HttpServlet {
 	protected boolean validateUser(String userName,String passKey)
 	{
 		connect userAuthenticationConnection = new connect();
-		ResultSet rs = null ;
 		boolean test = userAuthenticationConnection.doConnection();
 		if(test == true)
 		{
 			Connection con = userAuthenticationConnection.getConnect();
 			PreparedStatement stmt= null;
-			String sql= "select password from personal_details where email = ?";
+			String sql= "select * from personal_details where eMail = ?";
 			try {
 				
 				stmt = con.prepareStatement(sql);
@@ -82,20 +94,18 @@ public class Login extends HttpServlet {
 			}			
 			String passWord=null;
 			try {
-				
+					
 					passWord = rs.getString("password");				
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 			if(passWord.equals(passKey))
 			{
+				
 				userAuthenticationConnection.closeConnection();
 				return true;
 			}
 		}
 		return false;
 		}
-		
-	
-
 }
