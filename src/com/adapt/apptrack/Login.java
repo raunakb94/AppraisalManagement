@@ -22,7 +22,7 @@ import com.google.gson.Gson;
  */
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	ResultSet rs = null ;
+	ResultSet rs2 = null ;
     public Login() {
         super();
     }
@@ -47,11 +47,23 @@ public class Login extends HttpServlet {
 		boolean test =validateUser(name,passKey);
 		if(test == true){
 			System.out.println("Working Good Till now");
-			Gson gson = new Gson();
+			//Gson gson = new Gson();
 			//String json = gson.toJson(rs);
 			//Employee emp = new Employee();
 			//emp.initialiseObject(json);
 			//request.setAttribute("json",json);
+			Employee emp = new Employee();
+			try {
+				emp.setFirstName(rs2.getString("firstName"));
+				emp.setLastName(rs2.getString("lastName"));
+				emp.seteMail(rs2.getString("eMail"));
+				emp.setEmpId(Integer.parseInt(rs2.getString("empId")));
+				System.out.println(emp.getFirstName());
+			} catch (SQLException e) {
+				System.out.println("Errrroosdadjabsd");
+				e.printStackTrace();
+			}
+			request.setAttribute("employee",emp);
 			RequestDispatcher rd = request.getRequestDispatcher("home.jsp");//Redirects To Home.jsp
 			rd.forward(request, response);
 		}
@@ -73,6 +85,7 @@ public class Login extends HttpServlet {
 	{
 		connect userAuthenticationConnection = new connect();
 		boolean test = userAuthenticationConnection.doConnection();
+		ResultSet rs = null;
 		if(test == true)
 		{
 			Connection con = userAuthenticationConnection.getConnect();
@@ -83,6 +96,7 @@ public class Login extends HttpServlet {
 				stmt = con.prepareStatement(sql);
 				stmt.setString(1,userName);
 				rs = stmt.executeQuery();
+				rs2 = rs;
 				if(!rs.first())
 				{
 					return false;
@@ -102,7 +116,7 @@ public class Login extends HttpServlet {
 			if(passWord.equals(passKey))
 			{
 				
-				userAuthenticationConnection.closeConnection();
+				//AuthenticationConnection.closeConnection();
 				return true;
 			}
 		}

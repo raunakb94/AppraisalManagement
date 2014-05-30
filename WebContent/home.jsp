@@ -8,6 +8,7 @@
 </head>
 <body>
 
-	<H1>Welcome To Your Home Page <% out.println(request.getParameter("userName")); %></H1>
+	<H1>Welcome To Your Home Page <% out.println(request.getAttribute("employee")); %></H1>
+	${employee.firstName}
 </body>
 </html>
