@@ -47,8 +47,7 @@ public class Login extends HttpServlet {
 		boolean test =validateUser(name,passKey);
 		if(test == true){
 			System.out.println("Working Good Till now");
-			//Gson gson = new Gson();
-			//String json = gson.toJson(rs);
+			String json = "";
 			//Employee emp = new Employee();
 			//emp.initialiseObject(json);
 			//request.setAttribute("json",json);
@@ -58,12 +57,14 @@ public class Login extends HttpServlet {
 				emp.setLastName(rs2.getString("lastName"));
 				emp.seteMail(rs2.getString("eMail"));
 				emp.setEmpId(Integer.parseInt(rs2.getString("empId")));
-				System.out.println(emp.getFirstName());
+				Gson gson = new Gson();
+				json = gson.toJson(emp);
+				System.out.println(json);
 			} catch (SQLException e) {
 				System.out.println("Errrroosdadjabsd");
 				e.printStackTrace();
 			}
-			request.setAttribute("employee",emp);
+			request.setAttribute("json",json);
 			RequestDispatcher rd = request.getRequestDispatcher("home.jsp");//Redirects To Home.jsp
 			rd.forward(request, response);
 		}
