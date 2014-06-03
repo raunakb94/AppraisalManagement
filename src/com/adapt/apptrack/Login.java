@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	ResultSet rs2 = null ;
+	String json = "";
     public Login() {
         super();
     }
@@ -38,6 +39,7 @@ public class Login extends HttpServlet {
 	 * Get Post Handles Username and Password and Calls a Validate Function
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("Post Request");	
 		
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
@@ -47,7 +49,6 @@ public class Login extends HttpServlet {
 		boolean test =validateUser(name,passKey);
 		if(test == true){
 			System.out.println("Working Good Till now");
-			String json = "";
 			//Employee emp = new Employee();
 			//emp.initialiseObject(json);
 			//request.setAttribute("json",json);
@@ -64,7 +65,6 @@ public class Login extends HttpServlet {
 				System.out.println("Errrroosdadjabsd");
 				e.printStackTrace();
 			}
-			request.setAttribute("json",json);
 			RequestDispatcher rd = request.getRequestDispatcher("home.jsp");//Redirects To Home.jsp
 			rd.forward(request, response);
 		}
@@ -78,6 +78,19 @@ public class Login extends HttpServlet {
 			out.close();
 		}
 	}
+	
+	/**
+	 * Get Post Handles Username and Password and Calls a Validate Function
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("Hello");
+		PrintWriter out = response.getWriter();
+		json = "{\"rows\" : ["+json+"]}";
+		System.out.println(json);
+		out.write(json);
+		//RequestDispatcher rd = request.getRequestDispatcher("home.jsp");//Redirects To Home.jsp
+		//rd.forward(request, response);
+		}
 	/*
 	 * validateUser validates user on creating connection with a Database Specified
 	 * in the "connect" class
