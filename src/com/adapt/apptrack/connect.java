@@ -33,6 +33,7 @@ public class connect {
 				System.out.println("abc "+e.getMessage());
 				return false;
 			}
+				System.out.println("Connected");
 				return true;
 	}
 	/*
@@ -42,6 +43,7 @@ public class connect {
 	{
 		try {
 			connection.close();
+			System.out.println("Closed Connection");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -8,4 +8,12 @@
     <servlet-name>login</servlet-name>
     <url-pattern>/login</url-pattern>
   </servlet-mapping>
+  <servlet>
+  	<servlet-name>transactionservlet</servlet-name>
+  	<servlet-class>TransactionServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>transactionservlet</servlet-name>
+  	<url-pattern>/transactionservlet</url-pattern>
+  </servlet-mapping>
 </web-app>

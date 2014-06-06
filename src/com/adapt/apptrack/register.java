@@ -29,10 +29,7 @@ public class register extends HttpServlet {
 		try{
 			Employee empTemp = new Employee();
 			empTemp.setFirstName(request.getParameter("firstName"));
-			empTemp.setrequest.getParameter("lastName");
-			String eMail = request.getParameter("eMail");
-			Integer contactNumber = request.getParameter("contactNumber");
-			String password = request.getParameter("password");
+			
 		}
 		finally{
 			Security secureObject = new Security();

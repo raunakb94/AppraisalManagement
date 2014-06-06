@@ -1,6 +1,6 @@
 package com.adapt.apptrack;
 
-
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -22,8 +22,16 @@ import com.google.gson.Gson;
  */
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
+	//Employee emp;
+	
+	
 	ResultSet rs2 = null ;
+	
+	
 	String json = "";
+	
+	
     public Login() {
         super();
     }
@@ -32,7 +40,6 @@ public class Login extends HttpServlet {
 	 * Servlet Init Configuration
 	 */
 	public void init(ServletConfig config) throws ServletException {
-		
 	}
 
 	/**
@@ -40,33 +47,46 @@ public class Login extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("Post Request");	
-		
+		Employee emp = new Employee();
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
 		try{
 			String name = request.getParameter("userName");
 		String passKey = request.getParameter("Password");
-		boolean test =validateUser(name,passKey);
-		if(test == true){
+		int testId =validateUser(name,passKey);
+		if(testId >0){
 			System.out.println("Working Good Till now");
-			//Employee emp = new Employee();
-			//emp.initialiseObject(json);
-			//request.setAttribute("json",json);
-			Employee emp = new Employee();
 			try {
-				emp.setFirstName(rs2.getString("firstName"));
-				emp.setLastName(rs2.getString("lastName"));
-				emp.seteMail(rs2.getString("eMail"));
-				emp.setEmpId(Integer.parseInt(rs2.getString("empId")));
-				Gson gson = new Gson();
-				json = gson.toJson(emp);
-				System.out.println(json);
-			} catch (SQLException e) {
+				connect employeeConnection = new connect();
+				employeeConnection.doConnection();
+				Connection con = employeeConnection.getConnect();
+				String query = "select * from employeee where empId = ?";
+				PreparedStatement stmt = con.prepareStatement(query);
+				stmt.setInt(1,testId);
+				ResultSet rs = stmt.executeQuery();
+				while(rs.next())
+				{
+				emp.setEmpId(rs.getInt(1));
+				emp.setFirstName(rs.getString(2));
+				emp.setLastName(rs.getString(3));
+				emp.setDateJoin(rs.getDate(4));
+				emp.setPost(rs.getString(5));
+				emp.setManagerID(rs.getInt(6));
+				emp.updateTable();
+				emp.loadDataEmployee();}
+				} 
+				catch (SQLException e) {
 				System.out.println("Errrroosdadjabsd");
 				e.printStackTrace();
 			}
-			RequestDispatcher rd = request.getRequestDispatcher("home.jsp");//Redirects To Home.jsp
+			Gson gson = new Gson();
+			json = gson.toJson(emp);
+			System.out.println(json);
+			//RequestDispatcher rd = request.getRequestDispatcher("home.jsp?id="+rs2.getString("empId"));
+			request.setAttribute("json", json);
+			RequestDispatcher rd = request.getRequestDispatcher("home.jsp");
 			rd.forward(request, response);
+			System.out.println("forwardeer");
 		}
 		else{
 			out.println("Login Failure Try Again");
@@ -76,6 +96,7 @@ public class Login extends HttpServlet {
 		}
 		finally {
 			out.close();
+			
 		}
 	}
 	
@@ -83,20 +104,18 @@ public class Login extends HttpServlet {
 	 * Get Post Handles Username and Password and Calls a Validate Function
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("Hello");
+		System.out.println("Get Request");
 		PrintWriter out = response.getWriter();
-		json = "{\"rows\" : ["+json+"]}";
-		System.out.println(json);
-		out.write(json);
-		//RequestDispatcher rd = request.getRequestDispatcher("home.jsp");//Redirects To Home.jsp
-		//rd.forward(request, response);
+		String str = "{\"rows\" : ["+json+"]}";
+		System.out.println(str);
+		out.write(str);
 		}
 	/*
 	 * validateUser validates user on creating connection with a Database Specified
 	 * in the "connect" class
 	 */
-	protected boolean validateUser(String userName,String passKey)
-	{
+	protected int validateUser(String userName,String passKey)
+	{	
 		connect userAuthenticationConnection = new connect();
 		boolean test = userAuthenticationConnection.doConnection();
 		ResultSet rs = null;
@@ -104,7 +123,7 @@ public class Login extends HttpServlet {
 		{
 			Connection con = userAuthenticationConnection.getConnect();
 			PreparedStatement stmt= null;
-			String sql= "select * from personal_details where eMail = ?";
+			String sql= "select * from securityInfo where eMail = ?";
 			try {
 				
 				stmt = con.prepareStatement(sql);
@@ -113,7 +132,7 @@ public class Login extends HttpServlet {
 				rs2 = rs;
 				if(!rs.first())
 				{
-					return false;
+					return 0;
 				}
 			}
 			
@@ -129,11 +148,18 @@ public class Login extends HttpServlet {
 			}
 			if(passWord.equals(passKey))
 			{
-				
-				//AuthenticationConnection.closeConnection();
-				return true;
+				int id = 0;
+				try {
+					id = rs.getInt("empId");
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				userAuthenticationConnection.closeConnection();
+				userAuthenticationConnection = null;
+				return id;
 			}
 		}
-		return false;
+		return 0;
 		}
 }
