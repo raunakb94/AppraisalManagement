@@ -11,9 +11,10 @@
 <script src="/apptrack/gridJS/js/i18n/grid.locale-en.js" type="text/javascript"></script>
 <script src="/apptrack/gridJS/js/jquery.jqGrid.min.js" type="text/javascript"></script>
 <script type="text/javascript">
+var lastsel;
 $(document).ready(function(){
 	jQuery("#list4").empty().jqGrid({
-		url : "http://localhost:9999/apptrack/login",
+		url : "http://localhost:9999/apptrack/login?id=details&q=0",
 		datatype: "json",
 		colNames:['First Name','Last Name', 'dateJoin', 'Your Employee Id','Manager Id','Post'],
 	   	colModel:[
@@ -29,21 +30,77 @@ $(document).ready(function(){
 	   	loadonce: true,
 	   	viewrecords: true,
 	    gridview: true,
-	   	caption: "Your Personal Details As From Our Databases",
-	   	editurl :"/transactionservlet"
+	   	caption: "Your Personal Details As From Our Databases"
 	   	});
-	$("#bedata").click(function(){
-   		var gr = jQuery("#list4").jqGrid('getGridParam','selrow');
-   		if( gr != null ) jQuery("#list4").jqGrid('editGridRow',gr,{height:280,reloadAfterSubmit:false});
-   		else alert("Please Select Row");});
-});
+	$("#pendingdata").click(function(){
+		jQuery("#pendingappraisals").empty().jqGrid({
+			url : "http://localhost:9999/apptrack/login?id=pending&q=0",
+			datatype: "json",
+			colNames:['Appraisal Id','Start Date'],
+		   	colModel:[
+		   				{name:"appraisalId", width:100,editable:true},
+						{name:"startDate", width:100,editable:true}
+						],
+		   	mtype : "get",
+		   	height : "100%",
+		   	width : 500,
+		   	loadonce: true,
+		   	viewrecords: true,
+		    gridview: true,
+		   	caption: "List OF Pending Appraisal",
+		   	subGrid : true,
+		   	jsonReader : {
+		   		repeatitems : false,
+		   		id : 'appraisalId'
+				},
+				subGridRowExpanded: function(subgrid_id, row_id) {
+					var subgrid_table_id;
+					subgrid_table_id = subgrid_id+"_t";
+					$("#"+subgrid_id).html("<table id='"+subgrid_table_id+"'></table>");
+					jQuery("#"+subgrid_table_id).jqGrid({
+						url : 'http://localhost:9999/apptrack/login?id=pending&q='+row_id,
+						datatype : 'json',
+						colNames: ['Id','Category','Description'],
+						colModel: [
+						     {name : "goalId",width:10},
+							 {name:"type",width:80},
+							 {name:"description",width:130,editable:true}],
+					    height: '100%',
+					    jsonReader:{
+					    	repeatitems:false,
+					    	id : 'goalId'
+					    },
+					    onSelectRow: function(id){
+							if(id && id!==lastsel){
+								jQuery("#"+subgrid_table_id).jqGrid('restoreRow',lastsel);
+								jQuery("#"+subgrid_table_id).jqGrid('editGridRow',id,{reloadAfterSubmit : false,closeAfterEdit :true});
+								lastsel=id;
+							}
+						},
+						editurl : "http://localhost:9999/apptrack/transaction",
+					    viewrecords : true,
+					    loadonce : true,
+					gridview : true,
+					height : "100%",
+					width : '100%'
+					});
+				}
+	  });
+		
+	});
+	$("#completedappraisal").click(function(){
+	    	alert("Pendinggggg");
+	  });
+	});
+
 </script>
 </head>
 <body >
 	<H1>Welcome To Your Home Page</H1>
-	
 	<table id="list4"></table>
-	<input type="button" value="Click to edit" id="bedata">
-	<table id="pendingappraisals">dsadasdad</table>
+	<input type="button" value="List Of Pending Appraisal" id="pendingdata">
+	<input type="button" value="List Of Completed Appraisal" id="completedappraisal">
+	<table id="pendingappraisals">Pending Appraisals</table>
+	<table id="completedappraisal">Completed Appraisal</table>
 </body>
 </html>

@@ -9,11 +9,11 @@
     <url-pattern>/login</url-pattern>
   </servlet-mapping>
   <servlet>
-  	<servlet-name>transactionservlet</servlet-name>
-  	<servlet-class>TransactionServlet</servlet-class>
+  	<servlet-name>transaction</servlet-name>
+  	<servlet-class>com.adapt.apptrack.TransactionServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-  	<servlet-name>transactionservlet</servlet-name>
-  	<url-pattern>/transactionservlet</url-pattern>
+  	<servlet-name>transaction</servlet-name>
+  	<url-pattern>/transaction</url-pattern>
   </servlet-mapping>
 </web-app>

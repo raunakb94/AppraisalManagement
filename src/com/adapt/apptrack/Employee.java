@@ -124,6 +124,8 @@ public class Employee {
 		protected void loadDataEmployee()
 		{
 			System.out.println("loadEmployee");
+			pendingAppraisal.clear();
+			completedAppraisal.clear();
 			connect temp2 = new connect();
 			temp2.doConnection();
 			Connection con = temp2.getConnect();

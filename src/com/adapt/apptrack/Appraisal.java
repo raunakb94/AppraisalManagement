@@ -40,8 +40,9 @@ public class Appraisal {
 	
 	protected void loadDataAppraisal(String post)
 	{
+		listOfGoals.clear();
 		System.out.println("load appraisal");
-		String query = "Select * from emp_goals where postCriteria = ? group by category";
+		String query = "Select * from emp_goals where postCriteria = ? order by category";
 		connect appraisalConnection = new connect();
 		appraisalConnection.doConnection();
 		
@@ -49,6 +50,7 @@ public class Appraisal {
 			Connection con = appraisalConnection.getConnect();
 			PreparedStatement stmt = con.prepareStatement(query);
 			stmt.setString(1,post);
+			System.out.println(stmt.toString()+"Stsms");
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next())
 			{

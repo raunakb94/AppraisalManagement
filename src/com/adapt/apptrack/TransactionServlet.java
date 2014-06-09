@@ -10,11 +10,14 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class TransactionServlet
  */
-@WebServlet("/TransactionServlet")
 public class TransactionServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
        
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6013789788605872349L;
+
+	/**
      * @see HttpServlet#HttpServlet()
      */
     public TransactionServlet() {
@@ -26,6 +29,8 @@ public class TransactionServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		System.out.println(request.getAttribute("description"));
 		// TODO Auto-generated method stub
 	}
 
@@ -34,6 +39,7 @@ public class TransactionServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		//
 	}
 
 }

@@ -1,12 +1,14 @@
 package com.adapt.apptrack;
 
 import com.google.gson.Gson;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,6 +17,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
 
 import com.google.gson.Gson;
 /**
@@ -23,7 +26,7 @@ import com.google.gson.Gson;
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	//Employee emp;
+	Employee emp=new Employee();
 	
 	
 	ResultSet rs2 = null ;
@@ -47,7 +50,7 @@ public class Login extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("Post Request");	
-		Employee emp = new Employee();
+		//Employee emp = new Employee();
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
 		try{
@@ -57,6 +60,7 @@ public class Login extends HttpServlet {
 		if(testId >0){
 			System.out.println("Working Good Till now");
 			try {
+				
 				connect employeeConnection = new connect();
 				employeeConnection.doConnection();
 				Connection con = employeeConnection.getConnect();
@@ -82,6 +86,9 @@ public class Login extends HttpServlet {
 			Gson gson = new Gson();
 			json = gson.toJson(emp);
 			System.out.println(json);
+			Cookie login = new Cookie("login",json);//Adding a Cookie for the interface
+			login.setMaxAge(-1);
+			response.addCookie(login);
 			//RequestDispatcher rd = request.getRequestDispatcher("home.jsp?id="+rs2.getString("empId"));
 			request.setAttribute("json", json);
 			RequestDispatcher rd = request.getRequestDispatcher("home.jsp");
@@ -105,10 +112,51 @@ public class Login extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("Get Request");
+		String id = request.getParameter("id");
+		String appId = request.getParameter("q");
+		int appraisalId = Integer.parseInt(appId); 
+		if(id.equals("details"))
+		{
 		PrintWriter out = response.getWriter();
 		String str = "{\"rows\" : ["+json+"]}";
 		System.out.println(str);
 		out.write(str);
+		}
+		else if(id.equals("pending")&&(appraisalId>0))
+		{
+			Iterator<Appraisal> it = emp.pendingAppraisal.iterator();
+			Appraisal temp=null;
+			while(it.hasNext())
+			{
+				temp = it.next();
+				if(temp.getAppraisalId()==appraisalId)
+					break;
+			}
+			Gson gson = new Gson();
+			JqGridData<Goal> goalList = new JqGridData<>(1,1, 1,temp.getListOfGoals());
+			String str = gson.toJson(goalList);
+			PrintWriter out = response.getWriter();
+			System.out.println(str);
+			out.write(str);
+		}
+		else if(id.equals("pending"))
+		{
+			System.out.println("In Pending");
+			JqGridData<Appraisal> pendingAppraisal = new JqGridData<>(1, 1, emp.pendingAppraisal.size(), emp.pendingAppraisal);
+			Gson gson = new Gson();
+			String str = gson.toJson(pendingAppraisal);
+			System.out.println(str);
+			PrintWriter out = response.getWriter();
+			out.write(str);
+		}
+		else if(id.equals("completed"))
+		{
+			System.out.println("In Completed");
+			JqGridData<Appraisal> completedAppraisal = new JqGridData<>(1, 1, emp.completedAppraisal.size(), emp.completedAppraisal);
+			Gson gson = new Gson();
+			String str = gson.toJson(completedAppraisal);
+			System.out.println(str);
+		}
 		}
 	/*
 	 * validateUser validates user on creating connection with a Database Specified
