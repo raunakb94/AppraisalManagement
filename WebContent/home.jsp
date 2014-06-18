@@ -13,6 +13,16 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
+	var isM = "Not Namager";
+	isM = ${isManager};
+	if(isM == true)
+		{
+		var newbutton = document.createElement('input');
+		newbutton.setAttribute("type","button");
+		newbutton.setAttribute("value","Go to Managerial Section");
+		newbutton.setAttribute("onclick","location.href='managerial.jsp'");
+		document.getElementById("managerButton").appendChild(newbutton);
+		}
 	jQuery("#list4").jqGrid({
 		url : "http://localhost:9999/apptrack/login?id=details&q=0",
 		datatype: "json",
@@ -100,9 +110,6 @@ $(document).ready(function(){
 	<input type="button" value="List Of Completed Appraisal" id="completedappraisalbutton">
 	<table id="pendingappraisals">Pending Appraisals</table>
 	<table id="completedappraisal">Completed Appraisal</table>
-	<% 	
-	Object	managerId = request.getAttribute("employee");
-		out.print(managerId);
-	%>
+	<div id="managerButton"></div>
 </body>
 </html>
