@@ -10,43 +10,32 @@
 $(document).ready(function(){
 	var appid2 = <% out.write(request.getParameter("appid"));%>;
 		alert(appid2);
+		document.cookie="appid="+appid2;
 		jQuery.getJSON("http://localhost:9999/apptrack/login?id=pending&q="+appid2)
 		.done(function(data){
 			alert("Done");
 			var jsonData = eval(data);
 			for(i in jsonData)
 				{
-				var newTr = document.createElement("TR");
-				var newTD1 = document.createElement("TD");
-				var newTD2 = document.createElement("TD");
-				var newTD3 = document.createElement("TD");
-				newTD1.innerHtml=jsonData[i]["goalId"]);
-				var text2 = document.createTextNode(jsonData[i]["type"]);
-				var text3 = document.createTextNode(jsonData[i]["description"]);
+				var newdiv = document.createElement('div');
+				var txt = document.createTextNode("GoalId::"+jsonData[i]["goalId"] + "  Category::  " +jsonData[i]["type"]+"  Description:  "+jsonData[i]["description"]);
 				var textbox = document.createElement("input");
 				textbox.setAttribute("type","text");
-				textbox.setAttribute("id",jsonData[i]["goalId"]);
-				newTr.appendChild(newTd1);
-				newTr.appendChild(newTd2);
-				newTr.appendChild(newTd3);
-				newTr.appendChild(textbox);
-				document.getElementById("dynamicdetails").appendChild(newTr);
+				textbox.setAttribute("name",jsonData[i]["goalId"]);
+				newdiv.appendChild(txt);
+				newdiv.appendChild(textbox);
+				document.getElementById("dynamicInput").appendChild(newdiv);
+
 				}
 		});
 });
 </script>
 </head>
 <body>
-<form action="" method = "POST">
+<h1>Appraisal Form</h1>
+<h2>Please Input Your Details</h2>
+<form action="appraisalSubmit" method = "POST">
 	<div id="dynamicInput">
-		<table id="dynamicdetails">
-			<tr>
-				<td>GoalId</td>
-				<td>Category</td>
-				<td>Description</td>
-				<td>Your Comments</td>
-			</tr>
-		</table>
      </div>
      <input type="submit" value="Submit Form After Completion">
 </form>

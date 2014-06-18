@@ -9,11 +9,19 @@
     <url-pattern>/login</url-pattern>
   </servlet-mapping>
   <servlet>
-  	<servlet-name>transaction</servlet-name>
-  	<servlet-class>com.adapt.apptrack.TransactionServlet</servlet-class>
+    <servlet-name>transaction</servlet-name>
+    <servlet-class>com.adapt.apptrack.TransactionServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-  	<servlet-name>transaction</servlet-name>
-  	<url-pattern>/transaction</url-pattern>
+    <servlet-name>transaction</servlet-name>
+    <url-pattern>/transaction</url-pattern>
+  </servlet-mapping>
+  <servlet>
+  	<servlet-name>AppraisalSubmit</servlet-name>
+  	<servlet-class>com.adapt.apptrack.AppraisalSubmit</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>AppraisalSubmit</servlet-name>
+  	<url-pattern>/appraisalSubmit</url-pattern>
   </servlet-mapping>
 </web-app>

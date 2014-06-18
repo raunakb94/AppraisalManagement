@@ -84,12 +84,11 @@ public class Login extends HttpServlet {
 			Gson gson = new Gson();
 			json = gson.toJson(emp);
 			System.out.println(json);
-			Cookie empId = new Cookie("empId",Integer.toString(emp.getEmpId()));//Adding a Cookie for the interface
+			Cookie empId = new Cookie("empid",Integer.toString(emp.getEmpId()));//Adding a Cookie for the interface
 			empId.setMaxAge(-1);
 			response.addCookie(empId);
-			//RequestDispatcher rd = request.getRequestDispatcher("home.jsp?id="+rs2.getString("empId"));
 			request.setAttribute("json", json);
-			request.setAttribute("employee", emp);
+			//request.setAttribute("employee", emp);
 			RequestDispatcher rd = request.getRequestDispatcher("home.jsp");
 			rd.forward(request, response);
 			System.out.println("forwardeer");

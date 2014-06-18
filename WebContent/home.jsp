@@ -13,7 +13,7 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
-	jQuery("#list4").empty().jqGrid({
+	jQuery("#list4").jqGrid({
 		url : "http://localhost:9999/apptrack/login?id=details&q=0",
 		datatype: "json",
 		colNames:['First Name','Last Name', 'dateJoin', 'Your Employee Id','Manager Id','Post'],
@@ -33,7 +33,7 @@ $(document).ready(function(){
 	   	caption: "Your Personal Details As From Our Databases"
 	   	});
 	$("#pendingdata").click(function(){
-		jQuery("#pendingappraisals").empty().jqGrid({
+		jQuery("#pendingappraisals").jqGrid({
 			url : "http://localhost:9999/apptrack/login?id=pending&q=0",
 			datatype: "json",
 			colNames:['Appraisal Id','Start Date','Actions'],
@@ -45,7 +45,6 @@ $(document).ready(function(){
 		   	mtype : "get",
 		   	height : "100%",
 		   	width : 500,
-		   	loadonce: true,
 		   	viewrecords: true,
 		    gridview: true,
 		   	caption: "List OF Pending Appraisal",
@@ -69,7 +68,7 @@ $(document).ready(function(){
 	});
 	 
 	$("#completedappraisalbutton").click(function(){
-		jQuery("#completedappraisal").empty().jqGrid({
+		jQuery("#completedappraisal").jqGrid({
 			url : "http://localhost:9999/apptrack/login?id=completed&q=0",
 			datatype: "json",
 			colNames:['Appraisal Id','Start Date','Score'],
@@ -81,7 +80,7 @@ $(document).ready(function(){
 		   	mtype : "get",
 		   	height : "100%",
 		   	width : 500,
-		   	loadonce: true,
+		   	loadonce: false,
 		   	viewrecords: true,
 		    gridview: true,
 		   	caption: "List OF Completed Appraisal",
