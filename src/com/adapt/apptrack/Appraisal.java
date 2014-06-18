@@ -73,4 +73,26 @@ public class Appraisal {
 		}
 		
 	}
+	protected void loadScore(int empId)
+	{
+		String query = "Select score from transact where empid = ? and appid = ?";
+		connect loadScoreConnection = new connect();
+		loadScoreConnection.doConnection();
+		Connection con = loadScoreConnection.getConnect();
+		try {
+			PreparedStatement stmt = con.prepareStatement(query);
+			stmt.setInt(1, empId);
+			stmt.setInt(2, this.appraisalId);
+			ResultSet rs = stmt.executeQuery();
+			int tempScore = 0;
+			while(rs.next())
+			{
+				int score = rs.getInt("score");
+				tempScore +=score;
+			}
+			this.score = tempScore;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }

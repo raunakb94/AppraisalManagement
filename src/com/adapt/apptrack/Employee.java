@@ -11,6 +11,7 @@ public class Employee {
 	private Date dateJoin;
 	private String Post;
 	private int managerID;
+	Boolean isManager;
 	List<Appraisal> pendingAppraisal = new ArrayList<Appraisal>();
 	List<Appraisal> completedAppraisal= new ArrayList<Appraisal>();
 	Employee()
@@ -20,6 +21,7 @@ public class Employee {
 		setEmpId(0);
 		setManagerID(0);
 		setPost("");
+		setIsManager(false);
 	}
 	/**
 	 * @return the firstName
@@ -78,6 +80,13 @@ public class Employee {
 	}
 	public void setDateJoin(Date dateJoin) {
 		this.dateJoin = dateJoin;
+	}
+	
+	public Boolean getIsManager() {
+		return isManager;
+	}
+	public void setIsManager(Boolean isManager) {
+		this.isManager = isManager;
 	}
 	
 	//Updates The table employeeappraisal to the list of new appraisals appraisal
@@ -140,6 +149,7 @@ public class Employee {
 					Appraisal temp = new Appraisal();
 					temp.setAppraisalId(rs.getInt("appId"));
 					temp.setStartDate(rs.getDate("startDate"));
+					temp.loadScore(this.getEmpId());
 					temp.loadDataAppraisal(this.getPost());
 					if(temp.getScore()>0)
 					{

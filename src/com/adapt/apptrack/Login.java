@@ -18,8 +18,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
-
-import com.google.gson.Gson;
 /**
  * Servlet implementation class Login
  */
@@ -86,11 +84,12 @@ public class Login extends HttpServlet {
 			Gson gson = new Gson();
 			json = gson.toJson(emp);
 			System.out.println(json);
-			Cookie login = new Cookie("login",json);//Adding a Cookie for the interface
-			login.setMaxAge(-1);
-			response.addCookie(login);
+			Cookie empId = new Cookie("empId",Integer.toString(emp.getEmpId()));//Adding a Cookie for the interface
+			empId.setMaxAge(-1);
+			response.addCookie(empId);
 			//RequestDispatcher rd = request.getRequestDispatcher("home.jsp?id="+rs2.getString("empId"));
 			request.setAttribute("json", json);
+			request.setAttribute("employee", emp);
 			RequestDispatcher rd = request.getRequestDispatcher("home.jsp");
 			rd.forward(request, response);
 			System.out.println("forwardeer");
@@ -133,8 +132,7 @@ public class Login extends HttpServlet {
 					break;
 			}
 			Gson gson = new Gson();
-			JqGridData<Goal> goalList = new JqGridData<>(1,1, 1,temp.getListOfGoals());
-			String str = gson.toJson(goalList);
+			String str = gson.toJson(temp.getListOfGoals());
 			PrintWriter out = response.getWriter();
 			System.out.println(str);
 			out.write(str);
@@ -156,6 +154,8 @@ public class Login extends HttpServlet {
 			Gson gson = new Gson();
 			String str = gson.toJson(completedAppraisal);
 			System.out.println(str);
+			PrintWriter out = response.getWriter();
+			out.write(str);
 		}
 		}
 	/*

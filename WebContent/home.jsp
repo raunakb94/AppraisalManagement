@@ -10,8 +10,8 @@
 <script src="/apptrack/gridJS/js/jquery-1.11.0.min.js" type="text/javascript"></script>
 <script src="/apptrack/gridJS/js/i18n/grid.locale-en.js" type="text/javascript"></script>
 <script src="/apptrack/gridJS/js/jquery.jqGrid.min.js" type="text/javascript"></script>
+
 <script type="text/javascript">
-var lastsel;
 $(document).ready(function(){
 	jQuery("#list4").empty().jqGrid({
 		url : "http://localhost:9999/apptrack/login?id=details&q=0",
@@ -36,10 +36,11 @@ $(document).ready(function(){
 		jQuery("#pendingappraisals").empty().jqGrid({
 			url : "http://localhost:9999/apptrack/login?id=pending&q=0",
 			datatype: "json",
-			colNames:['Appraisal Id','Start Date'],
+			colNames:['Appraisal Id','Start Date','Actions'],
 		   	colModel:[
 		   				{name:"appraisalId", width:100,editable:true},
-						{name:"startDate", width:100,editable:true}
+						{name:"startDate", width:100,editable:true},
+						{name:"act",width:100}
 						],
 		   	mtype : "get",
 		   	height : "100%",
@@ -48,59 +49,61 @@ $(document).ready(function(){
 		   	viewrecords: true,
 		    gridview: true,
 		   	caption: "List OF Pending Appraisal",
-		   	subGrid : true,
 		   	jsonReader : {
 		   		repeatitems : false,
 		   		id : 'appraisalId'
 				},
-				subGridRowExpanded: function(subgrid_id, row_id) {
-					var subgrid_table_id;
-					subgrid_table_id = subgrid_id+"_t";
-					$("#"+subgrid_id).html("<table id='"+subgrid_table_id+"'></table>");
-					jQuery("#"+subgrid_table_id).jqGrid({
-						url : 'http://localhost:9999/apptrack/login?id=pending&q='+row_id,
-						datatype : 'json',
-						colNames: ['Id','Category','Description'],
-						colModel: [
-						     {name : "goalId",width:10},
-							 {name:"type",width:80},
-							 {name:"description",width:130,editable:true}],
-					    height: '100%',
-					    jsonReader:{
-					    	repeatitems:false,
-					    	id : 'goalId'
-					    },
-					    onSelectRow: function(id){
-							if(id && id!==lastsel){
-								jQuery("#"+subgrid_table_id).jqGrid('restoreRow',lastsel);
-								jQuery("#"+subgrid_table_id).jqGrid('editGridRow',id,{reloadAfterSubmit : false,closeAfterEdit :true});
-								lastsel=id;
-							}
-						},
-						editurl : "http://localhost:9999/apptrack/transaction",
-					    viewrecords : true,
-					    loadonce : true,
-					gridview : true,
-					height : "100%",
-					width : '100%'
-					});
+			gridComplete: function(){
+				var ids = jQuery("#pendingappraisals").jqGrid('getDataIDs');
+				for(var i=0;i < ids.length;i++){
+					var cl = ids[i];
+					be = "<input type='button' value='Attend' onclick = \"$(\"#dialog\").dialog(\"open\")\">";
+					jQuery("#pendingappraisals").jqGrid('setRowData',cl,{act:be});
 				}
+			},
+			onSelectRow : function(id){
+				window.open("http://localhost:9999/apptrack/form.jsp?appid="+id,600,1000);
+			}
 	  });
 		
 	});
-	$("#completedappraisal").click(function(){
-	    	alert("Pendinggggg");
+	 
+	$("#completedappraisalbutton").click(function(){
+		jQuery("#completedappraisal").empty().jqGrid({
+			url : "http://localhost:9999/apptrack/login?id=completed&q=0",
+			datatype: "json",
+			colNames:['Appraisal Id','Start Date','Score'],
+		   	colModel:[
+		   				{name:"appraisalId", width:100},
+						{name:"startDate", width:100},
+						{name:"score",width:100}
+						],
+		   	mtype : "get",
+		   	height : "100%",
+		   	width : 500,
+		   	loadonce: true,
+		   	viewrecords: true,
+		    gridview: true,
+		   	caption: "List OF Completed Appraisal",
+		   	jsonReader : {
+		   		repeatitems : false,
+		   		id : 'appraisalId'
+				}
+			});
 	  });
 	});
-
 </script>
 </head>
 <body >
 	<H1>Welcome To Your Home Page</H1>
 	<table id="list4"></table>
 	<input type="button" value="List Of Pending Appraisal" id="pendingdata">
-	<input type="button" value="List Of Completed Appraisal" id="completedappraisal">
+	<input type="button" value="List Of Completed Appraisal" id="completedappraisalbutton">
 	<table id="pendingappraisals">Pending Appraisals</table>
 	<table id="completedappraisal">Completed Appraisal</table>
+	<% 	
+	Object	managerId = request.getAttribute("employee");
+		out.print(managerId);
+	%>
 </body>
 </html>
