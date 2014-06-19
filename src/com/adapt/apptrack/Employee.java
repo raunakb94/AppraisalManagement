@@ -105,19 +105,19 @@ public class Employee {
 			PreparedStatement stmt2= con.prepareStatement(query);
 			PreparedStatement stmt3 = con.prepareStatement(query3);
 			stmt.setDate(1, this.dateJoin);
-			System.out.println(stmt.toString());
+			//System.out.println(stmt.toString());
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next())
 			{
 				stmt2.setInt(1,rs.getInt(1));
 				stmt2.setInt(2,this.empId);
-				System.out.println(stmt2.toString());
+				//System.out.println(stmt2.toString());
 				ResultSet rs2 = stmt2.executeQuery();
 				if(!rs2.next())
 				{
 					stmt3.setInt(2,rs.getInt(1));
 					stmt3.setInt(1,this.getEmpId());
-					System.out.println(stmt3.toString());
+					//System.out.println(stmt3.toString());
 					stmt3.executeUpdate();
 				}
 				else
@@ -139,10 +139,22 @@ public class Employee {
 			temp2.doConnection();
 			Connection con = temp2.getConnect();
 			String query = "Select * from employeeappraisal natural join appraisal where empId = ? ";
+			String query2 = "Select * from employeee where managerid=?";
 			try {
+				
 				PreparedStatement stmt = con.prepareStatement(query);
+				PreparedStatement stmt2 = con.prepareStatement(query2);
+				stmt2.setInt(1,this.getEmpId());
+				
+				ResultSet rs2 = stmt2.executeQuery();
+				System.out.println(stmt2.toString());
+				if(rs2.next())//Sets isManager = true if any tuples is received based on the query 2
+					{this.isManager=true;}
+				else
+					this.isManager=false;
+				System.out.println("Mnagerial dsakjdhasjdkhasd:::"+ this.isManager);
 				stmt.setInt(1, this.getEmpId());
-				System.out.println(stmt.toString());
+				//System.out.println(stmt.toString());
 				ResultSet rs = stmt.executeQuery();
 				while(rs.next())
 				{
@@ -154,11 +166,11 @@ public class Employee {
 					if(temp.getScore()>0)
 					{
 						this.completedAppraisal.add(temp);
-						System.out.println("Completed Appraisal");
+					//	System.out.println("Completed Appraisal");
 					}
 					else
 						{this.pendingAppraisal.add(temp);
-						System.out.println("Pending appraisal");
+						//System.out.println("Pending appraisal");
 						}
 				}
 			} catch (SQLException e) {

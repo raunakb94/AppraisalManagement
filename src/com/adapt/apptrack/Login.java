@@ -74,15 +74,15 @@ public class Login extends HttpServlet {
 				emp.setDateJoin(rs.getDate(4));
 				emp.setPost(rs.getString(5));
 				emp.setManagerID(rs.getInt(6));
-				if(emp.getEmpId()!=emp.getManagerID())
+				emp.updateTable();
+				emp.loadDataEmployee();
+				if(emp.getIsManager()==true)
 				{
-					emp.setIsManager(true);
 					request.setAttribute("isManager", "true");
 				}
 				else
 					request.setAttribute("isManager", "false");
-				emp.updateTable();
-				emp.loadDataEmployee();}
+					}
 				} 
 				catch (SQLException e) {
 				System.out.println("Errrroosdadjabsd");
@@ -124,7 +124,7 @@ public class Login extends HttpServlet {
 		{
 		PrintWriter out = response.getWriter();
 		String str = "{\"rows\" : ["+json+"]}";
-		System.out.println(str);
+		System.out.println("json"+str);
 		out.write(str);
 		}
 		else if(id.equals("pending")&&(appraisalId>0))
