@@ -162,8 +162,9 @@ public class Employee {
 					temp.setAppraisalId(rs.getInt("appId"));
 					temp.setStartDate(rs.getDate("startDate"));
 					temp.loadScore(this.getEmpId());
+					temp.loadStatus(this.getEmpId());
 					temp.loadDataAppraisal(this.getPost());
-					if(temp.getScore()>0)
+					if(temp.getStatus()==true )
 					{
 						this.completedAppraisal.add(temp);
 					//	System.out.println("Completed Appraisal");

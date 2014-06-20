@@ -20,7 +20,6 @@ $(document).ready(function(){
         if (c.indexOf(name) == 0) 
         	{
         	empid = c.substring(name.length,c.length);
-        	alert(empid);
         	}
     }
     jQuery("#list4").jqGrid({
@@ -54,14 +53,21 @@ $(document).ready(function(){
     	   				{name:"empId", width:100},
     					{name:"appId",width:100}
     	   	],
-    	   	jsonReader: {id: "appId",
+    	   	jsonReader: {
     	   	         repeatitems: false },
     	   	mtype : "get",
     	   	height : "100%",
     	   	loadonce: true,
     	   	viewrecords: true,
     	    gridview: true,
-    	   	caption: "Pending Appraisals To Rate For Different Employees"
+    	   	caption: "Pending Appraisals To Rate For Different Employees",
+    	   	onSelectRow:function(id){
+    	   		
+    	   		var empId = jQuery("#pendingRating").jqGrid('getCell',id,0);
+    	   		var appId = jQuery("#pendingRating").jqGrid('getCell',id,1);
+    	   		alert(id);
+    	   		window.open("http://localhost:9999/apptrack/ratingForm.jsp?appid="+appId+"&empid="+empId,600,1000);
+    	   	}
     	   	});
     	
     });

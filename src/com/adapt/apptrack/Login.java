@@ -55,7 +55,7 @@ public class Login extends HttpServlet {
 			String name = request.getParameter("userName");
 		String passKey = request.getParameter("Password");
 		int testId =validateUser(name,passKey);
-		if(testId >0){
+		if(testId >=0){
 			System.out.println("Working Good Till now");
 			try {
 				
@@ -183,10 +183,11 @@ public class Login extends HttpServlet {
 				stmt = con.prepareStatement(sql);
 				stmt.setString(1,userName);
 				rs = stmt.executeQuery();
+				System.out.println(stmt.toString());
 				rs2 = rs;
 				if(!rs.first())
 				{
-					return 0;
+					return -1;
 				}
 			}
 			
@@ -214,6 +215,6 @@ public class Login extends HttpServlet {
 				return id;
 			}
 		}
-		return 0;
+		return -1;
 		}
 }

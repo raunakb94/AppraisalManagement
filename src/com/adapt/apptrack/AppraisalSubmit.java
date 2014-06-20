@@ -55,7 +55,7 @@ public class AppraisalSubmit extends HttpServlet {
         }
         
         //Updating the transact table
-        String query = "insert into transact values(?,?,?,?,default,default,'emp');";
+        String query = "insert into transact values(?,?,?,?,default,0,'emp');";
         PreparedStatement stmt=null;
         connect transaction = new connect();
         transaction.doConnection();
@@ -84,6 +84,7 @@ public class AppraisalSubmit extends HttpServlet {
             out.println("Successsssss");
             
         }
+        transaction.closeConnection();
 	}
 
 }

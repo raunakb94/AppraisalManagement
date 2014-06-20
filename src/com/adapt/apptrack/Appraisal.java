@@ -8,11 +8,12 @@ public class Appraisal {
 	private java.sql.Date startDate;
 	private int score;
 	private List<Goal> listOfGoals = new ArrayList<Goal>();
-	
+	private boolean status;
 	
 	Appraisal()
 	{
 		score = 0;
+		status = false;
 	}
 	
 	public int getAppraisalId() {
@@ -26,6 +27,11 @@ public class Appraisal {
 	}
 	public void setStartDate(java.sql.Date startDate) {
 		this.startDate = startDate;
+	}
+	
+	public boolean getStatus()
+	{
+		return this.status;
 	}
 	public List<Goal> getListOfGoals() {
 		return listOfGoals;
@@ -91,6 +97,26 @@ public class Appraisal {
 				tempScore +=score;
 			}
 			this.score = tempScore;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	protected void loadStatus(int empId)
+	{
+		String query = "Select * from transact where empid=? and appid = ?";
+		connect loadStatusConnection = new connect();
+		loadStatusConnection.doConnection();
+		Connection con = loadStatusConnection.getConnect();
+		try {
+			PreparedStatement stmt = con.prepareStatement(query);
+			stmt.setInt(1, empId);
+			stmt.setInt(2, this.appraisalId);
+			ResultSet rs = stmt.executeQuery();
+			int tempScore = 0;
+			if(rs.next())
+				this.status=true;
+			
+			System.out.println("Status Of appraisal = "+this.status);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
